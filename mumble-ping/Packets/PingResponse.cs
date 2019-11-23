@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace KCode.MumblePing.Packets
 {
@@ -37,5 +38,24 @@ namespace KCode.MumblePing.Packets
 
         public override string ToString() => $"Version {Version}, Users/Slots: {ConnectedUserCount}/{MaxUserCount}, Bandwidth: {AllowedBandwith} bps";
         public string ToStringFull() => $"Version {Version}, RequestId: {RequestId}, Users/Slots: {ConnectedUserCount}/{MaxUserCount}, Bandwidth: {AllowedBandwith} bps";
+
+        public byte[] ToBytes()
+        {
+            using var s = new MemoryStream();
+            using var bw = new BinaryWriter(s);
+            bw.Write(VersionMajor.ToBytes());
+            bw.Write(VersionMinor.ToBytes());
+            bw.Write(VersionPatch.ToBytes());
+            bw.Write(RequestId.ToBytes());
+            bw.Write(ConnectedUserCount.ToBytes());
+            bw.Write(MaxUserCount.ToBytes());
+            bw.Write(AllowedBandwith.ToBytes());
+            return s.ToArray();
+        }
+
+        public string ToStringBytes()
+        {
+            return "PingRequest: " + string.Join("-", ToBytes());
+        }
     }
 }

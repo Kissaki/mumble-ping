@@ -22,5 +22,10 @@ namespace KCode.MumblePing.Packets
             bw.Write(RequestId.ToBytes());
             return s.ToArray();
         }
+
+        public string ToStringBytes()
+        {
+            return "PingRequest: " + string.Join("-", ToBytes());
+        }
     }
 }

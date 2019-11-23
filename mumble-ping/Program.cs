@@ -52,9 +52,9 @@ namespace KCode.MumblePing
         private static Task<int> SendPing(UdpClient client, string hostname, int port)
         {
             client.Connect(hostname, port);
-
-            Console.WriteLine($"Sending ping to {hostname}:{port}…");
-            var sendBuf = PingRequest.Create().ToBytes();
+            var packet = PingRequest.Create();
+            Console.Error.WriteLine($"Sending {packet.ToStringBytes()}…");
+            var sendBuf = packet.ToBytes();
             return client.SendAsync(sendBuf, sendBuf.Length);
         }
 
@@ -62,6 +62,8 @@ namespace KCode.MumblePing
 
         private static void HandlePingResponse(byte[] buffer)
         {
+            Console.Error.WriteLine("Received PingResponse: " + string.Join("-", buffer));
+
             var res = PingResponse.Parse(buffer);
             Console.WriteLine($"Ping response received: {res.ToString()}");
         }
